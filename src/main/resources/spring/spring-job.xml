@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="message.scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!--<ref bean="AutoQueryPaymentStatusJobTrigger" />-->
+				<ref bean="AutoCountUBeansByDayJobTrigger" />
+			</list>
+		</property>
+		<property name="taskExecutor">
+			<bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+				<property name="corePoolSize" value="10" />
+				<property name="maxPoolSize" value="100" />
+				<property name="queueCapacity" value="500" />
+			</bean>
+		</property>
+	</bean>
+
+	<!--名称：查询支付状态-->
+	<bean id="AutoQueryPaymentStatusJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoQueryPaymentStatusJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0/2 * * * * ?" />
+		<!--<property name="cronExpression" value="* 20 * * * ?" />-->
+   </bean>
+	<!--名称：执行计算Ubean的存储过程count_u_beans_by_day-->
+	<bean id="AutoCountUBeansByDayJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<property name="targetObject" ref="autoCountUBeansByDayJob" />
+				<property name="targetMethod" value="doJob" />
+			</bean>
+		</property>
+		<property name="cronExpression" value="0 30 1 * * ?" />
+		<!--<property name="cronExpression" value="0/5 * * * * ?" />-->
+    </bean>
+</beans>

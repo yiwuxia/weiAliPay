@@ -1,0 +1,51 @@
+CREATE DATABASE tvpayment DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+CREATE TABLE `payment_order` (
+	`id` varchar(255) NOT NULL COMMENT 'id',
+	`t_id` varchar(255) DEFAULT NULL,
+	`system` varchar(4) DEFAULT NULL COMMENT '模块id',
+	`channel` varchar(4) DEFAULT NULL COMMENT '渠道',
+	`product` varchar(255) DEFAULT NULL COMMENT '商品Id',
+	`product_desc` varchar(255) DEFAULT NULL COMMENT '产品描述',
+	`product_fee` varchar(255) DEFAULT NULL COMMENT '产品费用',
+	`fee` varchar(255) DEFAULT NULL COMMENT '订单费用',
+	`bill_create_ip` varchar(32) DEFAULT NULL COMMENT '订单生成的机器ip,ipv4',
+	`noncestr` varchar(255) DEFAULT NULL,
+	`openid` varchar(255) DEFAULT NULL COMMENT '用户id',
+	`issubscriber` varchar(4) DEFAULT NULL COMMENT '用户是否注册',
+	`req_time` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '发起请求的时间',
+	`resp_time` timestamp NULL DEFAULT NULL COMMENT '微信服务器响应时间',
+	`result` varchar(32) DEFAULT NULL COMMENT '微信服务器回的响应结果',
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='微信支付交易表';
+
+CREATE TABLE `payment_transaction` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`out_trade_no` varchar(32) DEFAULT NULL COMMENT '商户订单号',
+	`return_code` varchar(16) NOT NULL COMMENT '返回状态码',
+	`return_msg` varchar(128) DEFAULT NULL COMMENT '返回信息',
+	`appid` varchar(32) DEFAULT NULL COMMENT '公众账号ID',
+	`mch_id` varchar(32) DEFAULT NULL COMMENT '商户号',
+	`device_info` varchar(32) DEFAULT NULL COMMENT '设备号',
+	`nonce_str` varchar(32) DEFAULT NULL COMMENT '随机字符串',
+	`sign` varchar(32) DEFAULT NULL COMMENT '签名',
+	`sign_type` varchar(32) DEFAULT NULL COMMENT '签名类型',
+	`result_code` varchar(16) DEFAULT NULL COMMENT '业务结果',
+	`err_code` varchar(32) DEFAULT NULL COMMENT '错误代码',
+	`err_code_des` varchar(128) DEFAULT NULL COMMENT '错误代码描述',
+	`openid` varchar(128) DEFAULT NULL COMMENT '用户在商户appid下的唯一标识',
+	`is_subscribe` varchar(1) DEFAULT NULL COMMENT '是否关注公众账号',
+	`trade_type` varchar(16) DEFAULT NULL COMMENT '交易类型',
+	`bank_type` varchar(16) DEFAULT NULL COMMENT '付款银行',
+	`total_fee` bigint(20) DEFAULT NULL COMMENT '买家别名',
+	`settlement_total_fee` bigint(20) DEFAULT NULL COMMENT '应结订单金额',
+	`fee_type` varchar(8) DEFAULT NULL COMMENT '货币种类',
+	`transaction_id` varchar(32) DEFAULT NULL COMMENT '微信支付订单号',
+	`attach` varchar(128) DEFAULT NULL COMMENT '商家数据包',
+	`time_end` varchar(14) DEFAULT NULL COMMENT '支付完成时间',
+	`trade_state` varchar(32) DEFAULT NULL COMMENT '交易状态',
+	`req_time` timestamp NULL DEFAULT '0000-00-00 00:00:00' COMMENT '发起请求的时间',
+	PRIMARY KEY (`id`),
+	KEY `fkey_id_trans_order_id` (`out_trade_no`),
+	CONSTRAINT `fkey_id_trans_order_id` FOREIGN KEY (`out_trade_no`) REFERENCES `payment_order` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;

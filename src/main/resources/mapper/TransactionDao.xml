@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tv.payment.dao.TransactionDao">
+
+    <insert id="insertTransaction" parameterType="com.tv.payment.entity.Transaction">
+        insert into payment_transaction (out_trade_no, return_code, return_msg,
+        appid, mch_id, device_info, nonce_str, sign,sign_type, result_code, err_code,
+        err_code_des, openid, is_subscribe,trade_type,bank_type, total_fee, settlement_total_fee,
+        fee_type,transaction_id,attach, time_end, trade_state, req_time)
+        values(#{outTradeNo}, #{returnCode}, #{returnMsg}, #{appid}, #{mchId}, #{deviceInfo}, #{nonceStr},
+        #{sign},#{signType}, #{resultCode}, #{errCode},#{errCodeDes}, #{openid},#{isSubscribe},
+       #{tradeType},#{bankType}, #{totalFee}, #{settlementTotalFee},#{feeType}, #{transactionId},#{attach},
+       #{timeEnd},#{tradeState},#{reqTime})
+    </insert>
+
+    <select id="queryByOrderId" resultType="com.tv.payment.entity.Transaction" parameterType="String">
+        select id, out_trade_no, return_code, return_msg,
+        appid, mch_id, device_info, nonce_str, sign,sign_type, result_code, err_code,
+        err_code_des, openid, is_subscribe,trade_type,bank_type, total_fee, settlement_total_fee,
+        fee_type,transaction_id,attach, time_end, trade_state
+        from payment_transaction
+        where out_trade_no=#{orderId}
+    </select>
+
+</mapper>

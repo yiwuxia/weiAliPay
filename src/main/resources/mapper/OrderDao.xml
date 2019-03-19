@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tv.payment.dao.OrderDao">
+
+    <insert id="insertOrder">
+        insert ignore into payment_order (id, t_id, system, channel,
+        product, product_desc, product_fee, fee, bill_create_ip,noncestr,openid,issubscriber,  req_time)
+        values(#{id},#{tId}, #{system}, #{channel}, #{product}, #{productDesc}, #{productFee}, #{productFee},#{billCreateIp},#{noncestr},#{openId},#{issubscribe},#{reqTime})
+    </insert>
+
+    <select id="queryById" resultType="Order" parameterType="String">
+        select id, t_id, system, channel, product, product_desc, product_fee, fee, bill_create_ip,noncestr, openid, issubscriber, req_time
+        from payment_order
+        where id=#{id}
+    </select>
+
+    <update id="updateOrderById" parameterType="com.tv.payment.entity.Order">
+     update payment_order
+     <set>
+         <if test="result != null">result=#{result},</if>
+         <if test="respTime != null">resp_time=#{respTime}</if>
+     </set>
+        where id=#{id}
+    </update>
+
+</mapper>
